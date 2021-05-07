@@ -27,7 +27,7 @@ impl EventHandler for Handler {
             if name == "💭" {
                 let msg = reaction.message(&ctx.http).await.unwrap();
 
-                if msg.reactions.iter().any(|x| x.me) {
+                if msg.reactions.iter().any(|x| x.me) || msg.author.id == 809886994351783989 {
                      return;
                  }
 
@@ -54,7 +54,7 @@ impl EventHandler for Handler {
                 }).await {
                     println!("Error sending msg: {:?}", why);
                 }
-                if let Err(why) = msg.react(&ctx, ReactionType::Unicode("👍".to_string())).await {
+                if let Err(why) = msg.react(&ctx, ReactionType::Unicode("💭".to_string())).await {
                     println!("Error reacting to msg: {:?}", why);
                 };
             }
@@ -79,7 +79,7 @@ async fn main() {
 }
 
 async fn get_token() -> String {
-    let mut env = File::open(".env").expect("Failed to open file");
+    let mut env = File::open("src/.env").expect("Failed to open file");
     let mut token = String::new();
     env.read_to_string(&mut token).expect("TOKEN not found");
 
