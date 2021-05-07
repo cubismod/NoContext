@@ -18,14 +18,18 @@ struct Handler;
 
 #[async_trait]
 impl EventHandler for Handler {
+
     async fn reaction_add(&self, ctx: Context, reaction: Reaction) {
         // still dont have a good way to handle multiple servers/channels
-        let channel_id = ChannelId(838996935833550848);
-        let guild_id = GuildId(809911689453502504);
-
+        let guild_id = GuildId(803399148237488128);
+        let channel_id = ChannelId(839994802954043422);
         if let ReactionType::Unicode(name) = &reaction.emoji {
-            if name == "👀" {
+            if name == "💭" {
                 let msg = reaction.message(&ctx.http).await.unwrap();
+
+                if msg.reactions.iter().any(|x| x.me) {
+                     return;
+                 }
 
                 let tok = get_token().await;
                 let http = Http::new_with_token(&tok);
@@ -50,6 +54,9 @@ impl EventHandler for Handler {
                 }).await {
                     println!("Error sending msg: {:?}", why);
                 }
+                if let Err(why) = msg.react(&ctx, ReactionType::Unicode("👍".to_string())).await {
+                    println!("Error reacting to msg: {:?}", why);
+                };
             }
         }
     }
