@@ -8,7 +8,7 @@ edition = "2018"
 
 [dependencies]
 tokio = {version = "1.5.0", features = ["macros", "rt-multi-thread"]}
-serenity = {version = "0.10.5", default-features = false, features = ["client", "gateway", "rustls_backend", "model", "http", "cache"]}
+serenity = {version = "0.10.7", default-features = false, features = ["client", "gateway", "rustls_backend", "model", "http", "cache"]}
 chrono = "0.4.19"
 chrono-tz = "0.4"
 serde = { version = "1.0", features = ["derive"] }

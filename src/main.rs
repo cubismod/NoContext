@@ -39,13 +39,16 @@ impl EventHandler for Handler {
                 // let color = member.colour(&cache).await.unwrap_or(Colour::new(6573123));
                 // for some reason every user, regardless of role, has the color "None" and the or condition executes every time
 
+                let link = &msg.link_ensured(&ctx.http).await;
+
                 if let Err(why) = channel_id.send_message(&ctx.http, |m| {
                     m.embed(|e| {
                         //e.colour(color);
                         e.thumbnail(&msg.author.face());
                         e.title(&member.nick.unwrap_or(member.user.name));
                         e.description(&msg.content);
-                        e.field("⠀", format!("[Context]({})", &msg.link()), true)
+
+                        e.field("⠀", format!("[Context]({})", link), true)
                     }
                         .footer(|f| {
                             f.text(&msg.timestamp.with_timezone(&New_York).format("%D %l:%M%P"))
@@ -79,7 +82,7 @@ async fn main() {
 }
 
 async fn get_token() -> String {
-    let mut env = File::open("src/.env").expect("Failed to open file");
+    let mut env = File::open(".env").expect("Failed to open file");
     let mut token = String::new();
     env.read_to_string(&mut token).expect("TOKEN not found");
 
