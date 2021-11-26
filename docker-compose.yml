@@ -1,0 +1,10 @@
+version: '3.3'
+services:
+  nocontext:
+    build: .
+    container_name: "nocontext"
+    restart: unless-stopped
+    logging:
+          driver: journald
+          options:
+            tag: 'nocontext'

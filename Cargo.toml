@@ -1,15 +1,16 @@
 [package]
-name = "discord"
-version = "0.1.0"
-authors = ["administrator"]
+name = "nocontext"
+version = "0.0.1"
+authors = ["cubis", "ESoro25"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-tokio = {version = "1.5.0", features = ["macros", "rt-multi-thread"]}
-serenity = {version = "0.10.7", default-features = false, features = ["client", "gateway", "rustls_backend", "model", "http", "cache"]}
+tokio = {version = "1.14.0", features = ["macros", "rt-multi-thread"]}
+serenity = {version = "0.10.9", default-features = false, features = ["client", "gateway", "rustls_backend", "model", "http", "cache"]}
 chrono = "0.4.19"
-chrono-tz = "0.4"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0.64"
+chrono-tz = "0.6.0"
+serde = { version = "1.0.130", features = ["derive"] }
+serde_json = "1.0.72"
+toml = "0.5.8"
