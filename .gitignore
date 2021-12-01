@@ -1,3 +1,4 @@
 /target
 src/.env
 secrets.toml
+db/
