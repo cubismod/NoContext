@@ -75,12 +75,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8f1e260c3a9040a7c19a12468758f4c16f31a81a1fe087482be9570ec864bb6c"
 
 [[package]]
-name = "bytemuck"
-version = "1.7.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "72957246c41db82b8ef88a5486143830adeb8227ef9837740bdec67724cf2c5b"
-
-[[package]]
 name = "byteorder"
 version = "1.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -144,15 +138,6 @@ dependencies = [
  "parse-zoneinfo",
  "phf",
  "phf_codegen",
-]
-
-[[package]]
-name = "color-thief"
-version = "0.2.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "720cc3cf333a5de6196c41c9824d80553bdbb491cb802e67be6bdd9dfd1e9df8"
-dependencies = [
- "rgb",
 ]
 
 [[package]]
@@ -690,7 +675,6 @@ version = "0.0.2"
 dependencies = [
  "chrono",
  "chrono-tz",
- "color-thief",
  "reqwest",
  "serde",
  "serde_json",
@@ -1078,15 +1062,6 @@ dependencies = [
  "web-sys",
  "webpki-roots 0.21.1",
  "winreg",
-]
-
-[[package]]
-name = "rgb"
-version = "0.8.29"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a27fa03bb1e3e2941f52d4a555a395a72bf79b0a85fbbaab79447050c97d978c"
-dependencies = [
- "bytemuck",
 ]
 
 [[package]]

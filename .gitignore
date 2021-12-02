@@ -1,5 +1,5 @@
 /target
 src/.env
-secrets.toml
+secrets*.toml
 db/
 download/

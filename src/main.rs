@@ -11,6 +11,7 @@ use serenity::{
         id::GuildId, 
         gateway::Ready,
     },
+    client::bridge::gateway::GatewayIntents,
     http::client::Http, 
     // cache::Cache,
     // utils::Colour,
@@ -21,14 +22,11 @@ use serenity::{
 extern crate chrono;
 extern crate chrono_tz;
 extern crate reqwest;
-use chrono_tz::America::New_York;
 use serde::Deserialize;
 use serenity::utils::Colour;
 
 
-struct Handler {
-    db: sled::Db
-}
+struct Handler {}
 
 #[async_trait]
 impl EventHandler for Handler {
@@ -56,30 +54,29 @@ impl EventHandler for Handler {
         // still dont have a good way to handle multiple servers/channels
         let guild_id = GuildId(get_token_u64("guild").await);
         let channel_id = ChannelId(get_token_u64("channel").await);
+
         if let ReactionType::Unicode(name) = &reaction.emoji {
             // this is the only thing we will react to
             if name == "💭" {
                 let msg = reaction.message(&ctx.http).await.unwrap();
 
-                if msg.reactions.iter().any(|x| x.me) || msg.author.id == ctx.cache.current_user_id().await {
+                let msg_guild = match reaction.guild_id {
+                    Some(id) => id.0,
+                    None => 0
+                };
+
+                // ensure we only listen for reacts on the specified server in secrets.toml
+                // and ignore self reacts
+                if msg_guild != guild_id.0 ||
+                msg.reactions.iter().any(|x| x.me) ||
+                msg.author.id == ctx.cache.current_user_id().await {
                      return;
                  }
                 
                 // angry american noises
-                let color = Colour::new(5471646);
-                /* // download user avatar
-                let avatar_url = msg.author.avatar_url();
-                let url = match avatar_url {
-                    Some(url) => url,
-                    None => "nothing".to_string(),
-                };
-                if url != "nothing" {
-                    // download avatar
-                    let mut resp = reqwest::get(url).await;
-                    if resp.is_ok() {
-                        let mut file = tempfile()?;
-                    }
-                } */
+                // ensure that the embed color is not greater than the max embed color
+                // allowed by discord
+                let color = Colour::new((msg.author.id.0 as u32) % 16777215);
 
                 let tok = get_token_str("token").await;
                 let http = Http::new_with_token(&tok);
@@ -97,11 +94,9 @@ impl EventHandler for Handler {
                         e.description(&msg.content);
                         e.colour(color);
 
-                        e.field("⠀", format!("[Context]({})", link), true)
+                        e.field("⠀", format!("[Context]({})", link), false);
+                        e.field("Sent at", format!("<t:{}>", &msg.timestamp.timestamp()), false)
                     }
-                        .footer(|f| {
-                            f.text(&msg.timestamp.with_timezone(&New_York).format("%D %l:%M%P"))
-                        })
                     )
                 }).await {
                     println!("Error sending msg: {:?}", why);
@@ -119,13 +114,11 @@ impl EventHandler for Handler {
 }
 #[tokio::main]
 async fn main() {
-
-    // open up our database connection
-    let db: sled::Db = sled::open(get_token_str("dbLocation").await).unwrap();
-
     let tok = get_token_str("token").await;
     let mut client = Client::builder(&tok)
-        .event_handler(Handler {db: db})
+        .event_handler(Handler{})
+        // intents needed to determine the guild id from a message
+        .intents(GatewayIntents::GUILDS | GatewayIntents::GUILD_MESSAGE_REACTIONS)
         .await
         .expect("Error creating client");
 
