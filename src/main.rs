@@ -23,10 +23,7 @@ extern crate chrono_tz;
 extern crate reqwest;
 use chrono_tz::America::New_York;
 use serde::Deserialize;
-use color_thief::get_palette;
-use std::io;
 use serenity::utils::Colour;
-use std::io::{self, Write};
 
 
 struct Handler {
@@ -69,8 +66,8 @@ impl EventHandler for Handler {
                  }
                 
                 // angry american noises
-                let mut color = Colour::new(5471646);
-                // download user avatar
+                let color = Colour::new(5471646);
+                /* // download user avatar
                 let avatar_url = msg.author.avatar_url();
                 let url = match avatar_url {
                     Some(url) => url,
@@ -82,11 +79,10 @@ impl EventHandler for Handler {
                     if resp.is_ok() {
                         let mut file = tempfile()?;
                     }
-                }
+                } */
 
                 let tok = get_token_str("token").await;
                 let http = Http::new_with_token(&tok);
-                let color = get_palette(pixels: &[u8], color_format: ColorFormat, quality: u8, max_colors: u8);
                 let member = http.get_member(*guild_id.as_u64(), *msg.author.id.as_u64()).await.unwrap();
 
 
@@ -144,7 +140,7 @@ struct Secrets {
     guild: u64,
     channel: u64,
     prefix: String,
-    dbLocation: String
+    db_location: String
 }
 
 async fn load_toml() -> String {
@@ -163,7 +159,7 @@ async fn get_token_str(key: &str) -> String {
     match key.as_ref() {
         "token" => return secrets.token,
         "prefix" => return secrets.prefix,
-        "dbLocation" => return secrets.dbLocation,
+        "db_location" => return secrets.db_location,
         "&_" => return String::from(""),
         _ => return String::from(""),
     }
