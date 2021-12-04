@@ -93,13 +93,19 @@ impl EventHandler for Handler {
                                 .name(&member.nick.unwrap_or(member.user.name))
                                 .icon_url(&msg.author.face())
                                 .to_owned();
+                                
                     m.embed(|e| {
+                        // attach a file if included in original msg
+                        if !&msg.attachments.is_empty() {
+                            let attach = &msg.attachments[0];
+                            e.image(&attach.url);
+                        }
                         e.set_author(author);
                         e.description(&msg.content);
                         e.colour(color);
-
-                        e.field("⠀", format!("[Context]({})", link), false);
-                        e.field("Sent at", format!("<t:{}>", &msg.timestamp.timestamp()), false)
+                        e.field("Context", format!("[Link to message]({}) in <#{}>", link, &msg.channel_id), false);
+                        e.timestamp(&msg.timestamp)
+                        // e.field("Sent at", format!("<t:{}>", &msg.timestamp.timestamp()), false)
                     }
                     )
                 }).await {
