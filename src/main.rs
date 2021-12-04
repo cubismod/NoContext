@@ -6,13 +6,14 @@ use serenity::{
     model::{
         channel::Reaction, 
         channel::ReactionType,
-        channel::Message, 
+        channel::Message,
         id::ChannelId, 
         id::GuildId, 
         gateway::Ready,
     },
+    builder::CreateEmbedAuthor,
     client::bridge::gateway::GatewayIntents,
-    http::client::Http, 
+    http::client::Http,
     // cache::Cache,
     // utils::Colour,
     prelude::*
@@ -88,9 +89,12 @@ impl EventHandler for Handler {
                 let link = &msg.link_ensured(&ctx.http).await;
 
                 if let Err(why) = channel_id.send_message(&ctx.http, |m| {
+                    let author = CreateEmbedAuthor::default()
+                                .name(&member.nick.unwrap_or(member.user.name))
+                                .icon_url(&msg.author.face())
+                                .to_owned();
                     m.embed(|e| {
-                        e.thumbnail(&msg.author.face());
-                        e.title(&member.nick.unwrap_or(member.user.name));
+                        e.set_author(author);
                         e.description(&msg.content);
                         e.colour(color);
 
