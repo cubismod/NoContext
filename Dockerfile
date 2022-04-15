@@ -6,10 +6,10 @@ WORKDIR /usr/src/
 RUN cargo new --bin nocontext
 WORKDIR /usr/src/nocontext
 
+RUN apt-get -y update && apt-get -y upgrade && apt-get -y install pkg-config libssl-dev
 # 2. Copy our manifests and toml file
 COPY ./Cargo.lock ./Cargo.lock
 COPY ./Cargo.toml ./Cargo.toml
-COPY ./secrets.toml ./secrets.toml
 
 # 3. Build only the dependencies to cache them
 RUN cargo build --release

@@ -8,3 +8,5 @@ services:
           driver: journald
           options:
             tag: 'nocontext'
+    volumes:
+      - './secrets.toml:/usr/src/nocontext/secrets.toml:ro'
