@@ -23,6 +23,7 @@ use serenity::{
 extern crate chrono;
 extern crate chrono_tz;
 extern crate reqwest;
+extern crate bottomify;
 use serde::Deserialize;
 use serenity::utils::Colour;
 
@@ -58,7 +59,13 @@ impl EventHandler for Handler {
 
         if let ReactionType::Unicode(name) = &reaction.emoji {
             // this is the only thing we will react to
-            if name == "💭" {
+            if name == "💭" || name == "🍑" {
+                let mut bottom = false;
+
+                if name == "🍑" {
+                    bottom = true;
+                }
+
                 let msg = reaction.message(&ctx.http).await.unwrap();
 
                 let msg_guild = match reaction.guild_id {
@@ -101,7 +108,12 @@ impl EventHandler for Handler {
                             e.image(&attach.url);
                         }
                         e.set_author(author);
-                        e.description(&msg.content);
+                        if bottom {
+                            let bottom_text = bottomify::bottom::encode_string(&msg.content);
+                            e.description(bottom_text);
+                        } else {
+                            e.description(&msg.content);
+                        }
                         e.colour(color);
                         e.field("Context", format!("[Link to message]({}) in <#{}>", link, &msg.channel_id), false);
                         e.timestamp(&msg.timestamp)
