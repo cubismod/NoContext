@@ -1,0 +1,32 @@
+# Save the output of this file and use kubectl create -f to import
+# it into Kubernetes.
+#
+# Created with podman-4.0.3
+
+# NOTE: If you generated this yaml from an unprivileged and rootless podman container on an SELinux
+# enabled system, check the podman generate kube man page for steps to follow to ensure that your pod/container
+# has the right permissions to access the volumes added.
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2022-04-17T02:53:34Z"
+  labels:
+    app: nocontextpod
+  name: nocontext_pod
+spec:
+  containers:
+  - image: localhost/cubis/nocontext:latest
+    name: nocontext
+    securityContext:
+      capabilities: {}
+    volumeMounts:
+    - mountPath: /usr/src/nocontext/secrets.toml
+      name: home-shared-docker-NoContext-secrets.toml-host-0
+      readOnly: true
+  volumes:
+  - hostPath:
+      path: /home/shared/docker/NoContext/secrets.toml
+      type: File
+    name: home-shared-docker-NoContext-secrets.toml-host-0
+
