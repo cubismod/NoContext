@@ -1,0 +1,38 @@
+name: Docker
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+permissions:
+  contents: read
+  packages: write
+  attestations: write
+  id-token: write
+
+
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  merge_group:
+
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Kaniko build Dockerfile
+        uses: aevea/action-kaniko@master
+        with:
+          registry: ghcr.io
+          password: ${{ secrets.GITHUB_TOKEN }}
+          image: nocontext
+          cache: true
+          build_file: Dockerfile
+          cache_registry: cache
+          tag: ${{ github.sha }}
+          tag_with_latest: true
