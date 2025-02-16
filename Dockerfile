@@ -1,4 +1,4 @@
-FROM rust:slim-buster
+FROM rust:slim-buster@sha256:bed077243d5e7e02226ac4a2d816999806708b7dedd553c80d568ce4f0b6c964
 
 WORKDIR /usr/src/
 
